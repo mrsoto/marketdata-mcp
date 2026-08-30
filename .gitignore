@@ -1,0 +1,11 @@
+*.pyc
+__pycache__/
+data/*
+!data/.gitkeep
+.env
+.env.*
+*.pem
+*.key
+*.db
+*.db-*
+uv.lock

@@ -1,0 +1,45 @@
+[project]
+name = "market-mcp"
+version = "0.1.0"
+description = "MCP local para análisis técnico de ETFs/índices/equities con resolución de símbolos y fallback de equivalentes Yahoo."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    { name = "10381633+mrsoto@users.noreply.github.com," }
+]
+
+dependencies = [
+    "mcp>=1.2.0",
+    "yfinance>=0.2.40",
+    "pandas>=2.2.0",
+    "numpy>=1.26.0",
+    "pydantic>=2.7.0",
+    "diskcache>=5.6.0",
+    "python-dateutil>=2.9.0",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.2.0",
+    "pytest-asyncio>=0.23.0",
+]
+
+[project.scripts]
+market-mcp = "market_mcp.server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/market_mcp"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+]
