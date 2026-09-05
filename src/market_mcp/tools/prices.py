@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from typing import List, Literal, Optional
 
-from market_mcp.services.price_snapshot import PriceSnapshotService
-from market_mcp.services.technical_analysis import TechnicalAnalysisService, get_evaluation_capabilities
-from market_mcp.domain.models import is_valid_price_series
+from market_data.services.price_snapshot import PriceSnapshotService
+from market_data.services.technical_analysis import TechnicalAnalysisService, get_evaluation_capabilities
+from market_data.domain.models import is_valid_price_series
 
 
 def get_technical_evaluation_capabilities() -> dict:

@@ -6,8 +6,8 @@ from datetime import date
 
 import pandas as pd
 
-from market_mcp.domain.models import Candle, PriceSeries
-from market_mcp.services.price_snapshot import PriceSnapshotService
+from market_data.domain.models import Candle, PriceSeries
+from market_data.services.price_snapshot import PriceSnapshotService
 
 
 class _CapturingProvider:

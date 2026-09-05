@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import hashlib
+import os
 import tarfile
 from datetime import datetime, timezone
 from pathlib import Path
@@ -11,8 +12,8 @@ from urllib.parse import unquote
 
 import pandas as pd
 
-from market_mcp.domain.models import Candle, PriceSeries
-from market_mcp.storage.cache import PriceCache
+from market_data.domain.models import Candle, PriceSeries
+from market_data.storage.cache import PriceCache
 
 
 def _parquet_to_price_series(df: pd.DataFrame, symbol: str) -> PriceSeries:
@@ -126,11 +127,14 @@ def _json_to_price_series(payload: dict, symbol: str) -> PriceSeries:
 
 def bootstrap_cache_from_external(
     source_dir: str,
-    target_cache_dir: str = "data/ohlcv_cache",
+    target_cache_dir: str | None = None,
     dry_run: bool = False,
 ) -> dict:
     source = Path(source_dir)
-    target = Path(target_cache_dir)
+    resolved_target = target_cache_dir or os.environ.get("MARKET_DATA_ROOT")
+    if not resolved_target:
+        raise RuntimeError("MARKET_DATA_ROOT is required when target_cache_dir is omitted")
+    target = Path(resolved_target).expanduser() / "ohlcv_cache" if target_cache_dir is None else Path(resolved_target)
 
     if not source.exists():
         return {"error": f"Source directory not found: {source_dir}"}
@@ -204,7 +208,7 @@ def bootstrap_cache_from_external(
 
     return {
         "source": source_dir,
-        "target": target_cache_dir,
+        "target": str(target),
         "dry_run": dry_run,
         "imported": imported,
         "errors": errors,

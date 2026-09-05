@@ -4,8 +4,7 @@ from __future__ import annotations
 
 from typing import Optional
 
-from market_mcp.providers.symbol_resolution import EXCHANGE_SUFFIX_MAP, UCITS_SUFFIX_FALLBACKS
-from market_mcp.storage.equivalence_registry import EquivalenceRegistry
+from market_data.storage.equivalence_registry import EquivalenceRegistry
 
 
 def register_equivalence(

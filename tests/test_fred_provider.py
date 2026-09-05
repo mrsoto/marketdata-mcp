@@ -5,8 +5,8 @@ from __future__ import annotations
 from datetime import date
 from unittest.mock import patch
 
-from market_mcp.providers.composite import CompositeProvider
-from market_mcp.providers.fred import FredProvider
+from market_data.providers.composite import CompositeProvider
+from market_data.providers.fred import FredProvider
 
 
 class _Response:
@@ -26,7 +26,7 @@ class _Response:
 def test_fred_provider_parses_values_and_missing_observations() -> None:
     payload = "observation_date,T10Y2Y\n2026-01-02,0.25\n2026-01-03,.\n2026-01-06,-0.10\n"
 
-    with patch("market_mcp.providers.fred.urlopen", return_value=_Response(payload)) as request:
+    with patch("market_data.providers.fred.urlopen", return_value=_Response(payload)) as request:
         series = FredProvider().get_history("T10Y2Y", date(2026, 1, 1), date(2026, 1, 7))
 
     assert request.call_args.args[0].startswith("https://fred.stlouisfed.org/graph/fredgraph.csv?")

@@ -10,6 +10,7 @@ authors = [
 
 dependencies = [
     "mcp>=1.2.0",
+    "market-data",
     "yfinance>=0.2.40",
     "pandas>=2.2.0",
     "numpy>=1.26.0",
@@ -37,6 +38,9 @@ packages = ["src/market_mcp"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
+
+[tool.uv.sources]
+market-data = { path = "../../services/market-data" }
 
 [dependency-groups]
 dev = [

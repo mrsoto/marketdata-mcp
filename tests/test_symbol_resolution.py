@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from market_mcp.providers.symbol_resolution import (
+from market_data.providers.symbol_resolution import (
     EXCHANGE_SUFFIX_MAP,
     UCITS_SUFFIX_FALLBACKS,
     _build_candidates,

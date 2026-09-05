@@ -2,6 +2,9 @@
 
 Local MCP (stdio) for technical analysis of ETFs / indices / equities.
 
+The market data implementation lives in the shared `../services/market-data`
+package. This project exposes that implementation through MCP tools.
+
 Features:
 - Symbol resolution with equivalents fallback (exchange suffixes + UCITS).
 - Automatic FRED routing for macroeconomic series alongside Yahoo Finance.
@@ -80,6 +83,7 @@ The following identifiers are routed automatically to FRED's CSV endpoint:
 - `DFII10` - 10-Year Treasury Inflation-Indexed Security
 - `DGS10` - 10-Year Treasury Constant Maturity Rate
 - `DGS2` - 2-Year Treasury Constant Maturity Rate
+- `DGS30` - 30-Year Treasury Constant Maturity Rate
 - `T10Y2Y` - 10-Year Treasury Constant Maturity Minus 2-Year Treasury Constant Maturity
 - `DTWEXBGS` - Nominal Broad U.S. Dollar Index
 
@@ -89,16 +93,15 @@ no volume. Negative values, such as an inverted yield spread, are supported.
 
 ## Persistent data
 
-By default, relative paths are used:
+Runtime data must be outside Git and is configured through `MARKET_DATA_ROOT`:
 
-- `data/yahoo_ticker_equivalence_registry.json`
-- `data/yahoo_ticker_memory.json`
-- `data/ohlcv_cache/`
-- `data/snapshot_cache/`
+```bash
+export MARKET_DATA_ROOT="$HOME/ai/var/market-data"
+```
 
-Can be overridden with environment variables:
+The core creates these paths below the configured root:
 
-- `MARKET_MCP_EQUIVALENCE_REGISTRY_PATH`
-- `MARKET_MCP_TICKER_MEMORY_PATH`
-- `MARKET_MCP_OHLCV_CACHE_DIR`
-- `MARKET_MCP_SNAPSHOT_CACHE_DIR`
+- `yahoo_ticker_equivalence_registry.json`
+- `yahoo_ticker_memory.json`
+- `ohlcv_cache/`
+- `snapshot_cache/`

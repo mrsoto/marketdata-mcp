@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from market_mcp.domain.indicators import atr, macd, rsi, round_value, sma
+from market_data.domain.indicators import atr, macd, rsi, round_value, sma
 
 
 def _make_close_series(values: list[float]) -> pd.Series:

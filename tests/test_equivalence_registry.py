@@ -6,7 +6,7 @@ import json
 import tempfile
 from pathlib import Path
 
-from market_mcp.storage.equivalence_registry import (
+from market_data.storage.equivalence_registry import (
     EquivalenceRegistry,
     TickerMemoryMap,
     build_registry_entry,

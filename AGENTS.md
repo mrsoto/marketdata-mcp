@@ -71,13 +71,14 @@ src/market_mcp/
 
 ## Data paths
 
-Defaults use relative paths `data/`. Overridable via env vars:
+Runtime data is owned by the shared `market-data` package and must be outside
+the repository. Set `MARKET_DATA_ROOT`, for example:
 
-- `MARKET_MCP_DATA_DIR`
-- `MARKET_MCP_EQUIVALENCE_REGISTRY_PATH`
-- `MARKET_MCP_TICKER_MEMORY_PATH`
-- `MARKET_MCP_OHLCV_CACHE_DIR`
-- `MARKET_MCP_SNAPSHOT_CACHE_DIR`
+```bash
+export MARKET_DATA_ROOT="$HOME/ai/var/market-data"
+```
+
+The core derives equivalence, OHLCV and snapshot paths from that root.
 
 ## Client configuration
 

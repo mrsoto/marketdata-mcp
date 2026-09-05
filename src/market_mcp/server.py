@@ -2,62 +2,20 @@
 
 from __future__ import annotations
 
-import os
-from pathlib import Path
 from typing import List, Literal, Optional
 
 from mcp.server.fastmcp import FastMCP
 
-from market_mcp.domain.models import (
-    ETFPriceSnapshotReport,
-    IndicatorSnapshot,
-    SymbolResolution,
-)
-from market_mcp.providers.composite import CompositeProvider
-from market_mcp.providers.symbol_resolution import SymbolResolver
-from market_mcp.services.price_snapshot import PriceSnapshotService
+from market_data import build_runtime
+from market_data.services.price_snapshot import PriceSnapshotService
+from market_data.services.technical_analysis import get_evaluation_capabilities
+from market_data.services.technical_analysis import TechnicalAnalysisService
 from market_mcp.services.maritime_chokepoints import MaritimeChokepointService
-from market_mcp.services.technical_analysis import TechnicalAnalysisService
-from market_mcp.storage.cache import PriceCache, SnapshotCache
-from market_mcp.storage.equivalence_registry import EquivalenceRegistry
-
-DATA_DIR = Path(os.environ.get("MARKET_MCP_DATA_DIR", "data"))
-
-EQUIVALENCE_REGISTRY_PATH = Path(
-    os.environ.get("MARKET_MCP_EQUIVALENCE_REGISTRY_PATH", DATA_DIR / "yahoo_ticker_equivalence_registry.json")
-)
-TICKER_MEMORY_PATH = Path(
-    os.environ.get("MARKET_MCP_TICKER_MEMORY_PATH", DATA_DIR / "yahoo_ticker_memory.json")
-)
-OHLCV_CACHE_DIR = Path(
-    os.environ.get("MARKET_MCP_OHLCV_CACHE_DIR", DATA_DIR / "ohlcv_cache")
-)
-SNAPSHOT_CACHE_DIR = Path(
-    os.environ.get("MARKET_MCP_SNAPSHOT_CACHE_DIR", DATA_DIR / "snapshot_cache")
-)
-
 mcp = FastMCP("market-analysis")
-
-provider = CompositeProvider()
-equivalence_registry = EquivalenceRegistry(
-    registry_path=EQUIVALENCE_REGISTRY_PATH,
-    memory_map_path=TICKER_MEMORY_PATH,
-)
-resolver = SymbolResolver(registry=equivalence_registry)
-price_cache = PriceCache(cache_dir=OHLCV_CACHE_DIR, ttl_seconds=21600)
-snapshot_cache = SnapshotCache(cache_dir=SNAPSHOT_CACHE_DIR, ttl_seconds=3600)
-
-price_snapshot_service = PriceSnapshotService(
-    provider=provider,
-    resolver=resolver,
-    price_cache=price_cache,
-    snapshot_cache=snapshot_cache,
-)
-technical_service = TechnicalAnalysisService(
-    provider=provider,
-    resolver=resolver,
-    price_cache=price_cache,
-)
+market_runtime = build_runtime()
+equivalence_registry = market_runtime.resolver.registry
+price_snapshot_service = market_runtime.price_service
+technical_service = market_runtime.technical_service
 maritime_service = MaritimeChokepointService()
 
 
@@ -156,8 +114,7 @@ def get_technical_snapshot(
 @mcp.tool()
 def get_technical_evaluation_capabilities() -> dict:
     """Lista perfiles y horizontes tecnicos disponibles para seleccionar."""
-    from market_mcp.tools.prices import get_technical_evaluation_capabilities as _capabilities
-    return _capabilities()
+    return get_evaluation_capabilities()
 
 
 @mcp.tool()
@@ -199,7 +156,7 @@ def get_maritime_chokepoint_status(
 @mcp.tool()
 def bootstrap_cache_from_external(
     source_dir: str,
-    target_cache_dir: str = "data/ohlcv_cache",
+    target_cache_dir: Optional[str] = None,
     dry_run: bool = False,
 ) -> dict:
     """Import OHLCV cache from an external directory (for example the external cache path)."""

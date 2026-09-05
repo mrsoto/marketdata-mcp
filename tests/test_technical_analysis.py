@@ -4,13 +4,13 @@ from __future__ import annotations
 
 import pandas as pd
 
-from market_mcp.domain.models import Candle, PriceSeries
-from market_mcp.services.technical_analysis import (
+from market_data.domain.models import Candle, PriceSeries
+from market_data.services.technical_analysis import (
     TechnicalAnalysisService,
     _annualized_volatility,
     get_evaluation_capabilities,
 )
-from market_mcp.providers.symbol_resolution import SymbolResolver
+from market_data.providers.symbol_resolution import SymbolResolver
 
 
 class DummyTechnicalAnalysisService(TechnicalAnalysisService):

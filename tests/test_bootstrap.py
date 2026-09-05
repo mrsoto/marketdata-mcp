@@ -7,7 +7,7 @@ import json
 import tarfile
 from pathlib import Path
 
-from market_mcp.storage.cache import PriceCache
+from market_data.storage.cache import PriceCache
 from market_mcp.tools.bootstrap import bootstrap_cache_from_external
 
 
